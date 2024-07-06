@@ -26,4 +26,4 @@
 
 ## Preview
 
-<img src="ss/ui_components.png" alt="UI Preview" width="230" height = "470"/>
+<img src="UIcomponents/uicomponents.png" alt="UI Preview" width="255" height = "570"/>
