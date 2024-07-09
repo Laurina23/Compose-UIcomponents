@@ -3,22 +3,20 @@ package com.example.uicomponents
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.*
 import com.example.uicomponents.ui.theme.UIcomponentsTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,72 +24,92 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             UIcomponentsTheme {
-                CounterButton()
+                AppNavigation()
             }
         }
     }
-}
-@Composable
-fun CounterButton() {
-    var count by remember {
-        mutableStateOf(0)
+
+    @Composable
+    fun AppNavigation() {
+        val navController = rememberNavController()
+        NavHost(navController = navController, startDestination = "screen1") {
+            composable(route = "screen1") { Screen1(navController) }
+            composable(route = "screen2") { Screen2(navController) }
+            composable(route = "screen3") { Screen3(navController) }
+        }
     }
 
-    val isPositive = count > 0
-    val isNegative = count < 0
-
-    UIcomponentsTheme {
+    @Composable
+    fun Screen1(navController: NavController) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(36.dp),
-            verticalArrangement = Arrangement.Center
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = "Count Value is : $count",
-                fontSize = 18.sp,
-                modifier = Modifier.padding(bottom = 16.dp)
+            Text(text = "Welcome to Screen 1", fontSize = 24.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+            Image(painter = painterResource(id = R.drawable.android), contentDescription = "Sample Image")
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = { navController.navigate("screen2") }) {
+                Text(text = "Go to Screen 2")
+            }
+        }
+    }
+
+    @Composable
+    fun Screen2(navController: NavController) {
+        var text by remember { mutableStateOf(" ") }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "This is Screen 2", fontSize = 24.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+            TextField(
+                value = text,
+                onValueChange = { text = it },
+                modifier = Modifier.fillMaxWidth().padding(8.dp)
             )
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(onClick = { navController.navigate("screen3") }) {
+                Text(text = "Go to Screen 3")
+            }
+        }
+    }
+
+    @Composable
+    fun Screen3(navController: NavController) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "This is Screen 3", fontSize = 24.sp)
+            Spacer(modifier = Modifier.height(8.dp))
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp),
-
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "Current State:",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(bottom = 8.dp),
-                    )
-                    if (count == 0) {
-                        Text(text = "Zero")
-                    } else if (isPositive) {
-                        Text(text = "Positive")
-                    } else {
-                        Text(text = "Negative")
-                    }
+                    Text(text = "I am inside a Card")
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Button(onClick = { count-- }) {
-                    Text(text = "Decrement")
-                }
-
-                Button(onClick = { count++ }) {
-                    Text(text = "Increment")
-                }
+            Button(onClick = { navController.navigate("screen1") }) {
+                Text(text = "Go Back to Screen 1")
             }
         }
     }
