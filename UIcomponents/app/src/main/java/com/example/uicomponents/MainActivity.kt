@@ -5,13 +5,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,7 +30,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             UIcomponentsTheme {
-                AppNavigation()
+                GridSample()
             }
         }
     }
@@ -110,6 +116,44 @@ class MainActivity : ComponentActivity() {
             }
             Button(onClick = { navController.navigate("screen1") }) {
                 Text(text = "Go Back to Screen 1")
+            }
+        }
+    }
+
+    @Composable
+    fun LazyColumnSample() {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(16.dp)
+        ) {
+            items(100) { index ->
+                Text(text = "$index", modifier = Modifier.padding(8.dp))
+                Divider(color = Color.Gray)
+            }
+        }
+    }
+    @Composable
+    fun LazyRowSample() {
+        LazyRow(
+            modifier = Modifier.fillMaxSize().padding(16.dp)
+        ) {
+            items(50) { index ->
+                Text(text = "$index", modifier = Modifier.padding(8.dp))
+                Divider(color = Color.Gray)
+            }
+        }
+    }
+    @Composable
+    fun GridSample() {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.fillMaxSize().padding(16.dp)
+        ) {
+            items(50) { index ->
+                Card(
+                    modifier = Modifier.padding(8.dp),
+                ) {
+                    Text(text = "$index", modifier = Modifier.padding(16.dp))
+                }
             }
         }
     }
