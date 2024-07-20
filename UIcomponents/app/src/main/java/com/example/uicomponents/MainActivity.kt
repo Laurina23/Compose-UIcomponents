@@ -1,28 +1,26 @@
 package com.example.uicomponents
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.*
 import com.example.uicomponents.ui.theme.UIcomponentsTheme
 
 class MainActivity : ComponentActivity() {
@@ -30,131 +28,54 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             UIcomponentsTheme {
-                LazyColumnSample()
+                MainContent()
             }
         }
     }
+}
 
-    @Composable
-    fun AppNavigation() {
-        val navController = rememberNavController()
-        NavHost(navController = navController, startDestination = "screen1") {
-            composable(route = "screen1") { Screen1(navController) }
-            composable(route = "screen2") { Screen2(navController) }
-            composable(route = "screen3") { Screen3(navController) }
-        }
-    }
+@Composable
+fun MainContent() {
+    val context = LocalContext.current
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp)
+            .background(Color(0xFFEAEAEA)),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "Discover UI Design Principles",
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 18.dp)
+        )
 
-    @Composable
-    fun Screen1(navController: NavController) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "Welcome to Screen 1", fontSize = 24.sp)
-            Spacer(modifier = Modifier.height(8.dp))
-            Image(painter = painterResource(id = R.drawable.android), contentDescription = "Sample Image")
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { navController.navigate("screen2") }) {
-                Text(text = "Go to Screen 2")
+        val clickableText = buildAnnotatedString {
+            withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold, textDecoration = TextDecoration.None)) {
+                append("Tap ")
             }
-        }
-    }
-
-    @Composable
-    fun Screen2(navController: NavController) {
-        var text by remember { mutableStateOf(" ") }
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "This is Screen 2", fontSize = 24.sp)
-            Spacer(modifier = Modifier.height(8.dp))
-            TextField(
-                value = text,
-                onValueChange = { text = it },
-                modifier = Modifier.fillMaxWidth().padding(8.dp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = { navController.navigate("screen3") }) {
-                Text(text = "Go to Screen 3")
+            withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold, textDecoration = TextDecoration.Underline)) {
+                append("here")
             }
+            append(" to access detailed design guidelines.")
         }
-    }
 
-    @Composable
-    fun Screen3(navController: NavController) {
-        Column(
+        Text(
+            text = clickableText,
+            fontSize = 18.sp,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "This is Screen 3", fontSize = 24.sp)
-            Spacer(modifier = Modifier.height(8.dp))
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(text = "I am inside a Card")
-                    Spacer(modifier = Modifier.height(8.dp))
+                .clickable {
+                    launchBrowser(context, "https://developer.android.com/design/ui")
                 }
-            }
-            Button(onClick = { navController.navigate("screen1") }) {
-                Text(text = "Go Back to Screen 1")
-            }
-        }
+                .padding(14.dp)
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
+        )
     }
-
-    @Composable
-    fun LazyColumnSample() {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(16.dp)
-        ) {
-            items(100) { index ->
-                Text(text = "$index", modifier = Modifier.padding(8.dp))
-                Divider(color = Color.Gray)
-            }
-        }
-    }
-    @Composable
-    fun LazyRowSample() {
-        LazyRow(
-            modifier = Modifier.fillMaxSize().padding(16.dp)
-        ) {
-            items(50) { index ->
-                Text(text = "$index", modifier = Modifier.padding(8.dp))
-                Divider(color = Color.Gray)
-            }
-        }
-    }
-    @Composable
-    fun GridSample() {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier.fillMaxSize().padding(16.dp)
-        ) {
-            items(50) { index ->
-                Card(
-                    modifier = Modifier.padding(8.dp),
-                ) {
-                    Text(text = "$index", modifier = Modifier.padding(16.dp))
-                }
-            }
-        }
-    }
+}
+fun launchBrowser(context: android.content.Context, url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    context.startActivity(intent)
 }
